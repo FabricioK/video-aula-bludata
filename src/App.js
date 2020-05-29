@@ -35,7 +35,7 @@ class App extends Component {
   }
 
   launchMeeting() {
-    const apiKey = "OJ_VUyQUTbW5CmWc6FwLLg";
+    const apiKey = "CHAVE_EXEMPLO";
     const meetConfig = {
       meetingNumber: this.state.meetingNumber,
       leaveUrl: this.state.leaveUrl,
