@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Webcam from "react-webcam";
 
 const videoConstraints = {
-  width: 1280,
-  height: 720,
-  facingMode: "user"
+    width: 1280,
+    height: 720,
+    facingMode: "user"
 };
 
 const WebcamCapture = (props) => {
@@ -15,27 +15,18 @@ const WebcamCapture = (props) => {
 
     const capture = React.useCallback(
         () => {
-        const imageSrc = webcamRef.current.getScreenshot();
-        const pageImage = new Image();
-        pageImage.src =  imageSrc;
-        pageImage.onload = function() {
-            const canvas = document.createElement('canvas');
-            canvas.width = pageImage.naturalWidth;
-            canvas.height= pageImage.naturalHeight;        
-            const ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(pageImage, 0, 0);
-            saveScreenshot(canvas);
-        }
-        function saveScreenshot(canvas) {
-            let fileName = "image"
-            const link = document.createElement('a');
-            link.download = fileName + '.png';
-            canvas.toBlob(function(blob) {
-                link.href = URL.createObjectURL(blob);
-                link.click();
-            });
-        };
+            const imageSrc = webcamRef.current.getScreenshot();
+            var myHeaders = new Headers();
+            var myInit = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    imageSrc
+                })
+              };
+
+            fetch(props.uploadImageUrl, myInit);
+
         },
         [webcamRef]
     );
@@ -44,13 +35,13 @@ const WebcamCapture = (props) => {
         let interval = null;
         if (isActive) {
             interval = setInterval(() => {
-            setSeconds(seconds => seconds + 1);
+                setSeconds(seconds => seconds + 1);
             }, 1000);
         } else if (!isActive && seconds !== 0) {
             clearInterval(interval);
         }
 
-        if(seconds > props.tempo){
+        if (seconds > props.tempo) {
             capture();
             setSeconds(0);
         }
@@ -59,14 +50,14 @@ const WebcamCapture = (props) => {
 
     return (
         <>
-        <Webcam
-            audio={false}
-            height={720}
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-            width={1280}
-            videoConstraints={videoConstraints}
-        />
+            <Webcam
+                audio={false}
+                height={720}
+                ref={webcamRef}
+                screenshotFormat="image/jpeg"
+                width={1280}
+                videoConstraints={videoConstraints}
+            />
         </>
     );
 };

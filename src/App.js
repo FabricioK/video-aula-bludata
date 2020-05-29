@@ -7,16 +7,21 @@ import WebcamCapture from "./WebcamCapture";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      meetingLaunched: false,
-      meetingNumber: 97675040896,
-      leaveUrl: "http://localhost:3000/",
-      userName: "teste",
-      userEmail: "fabricio.antunes@bludata.com.br",
-      passWord: "",
-      role: 1
-    };
 
+    this.state = {
+      apiKey: props.apiKey,
+      meetingLaunched: false,
+      meetingNumber: props.meetingNumber,
+      leaveUrl: props.leaveUrl || "http://localhost:3000/",
+      signatureUrl: props.signatureUrl || "http://localhost:4000/",
+      uploadImageUrl: props.uploadImageUrl || "http://localhost:5000/",
+      uploadImageTime: props.uploadImageTime || 60,
+      userName: props.userName || "",
+      userEmail: props.userEmail || "fabricio.antunes@bludata.com.br",
+      passWord: props.password || "",
+      role: props.role || 0
+    };
+    console.log(this.state);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.launchMeeting = this.launchMeeting.bind(this);
     this.getSignature = this.getSignature.bind(this);
@@ -35,7 +40,6 @@ class App extends Component {
   }
 
   launchMeeting() {
-    const apiKey = "CHAVE_EXEMPLO";
     const meetConfig = {
       meetingNumber: this.state.meetingNumber,
       leaveUrl: this.state.leaveUrl,
@@ -45,15 +49,15 @@ class App extends Component {
       role: this.state.role
     };
     this.setState({ meetingLaunched: true });
-    this.getSignature(meetConfig, apiKey);
+    this.getSignature(meetConfig, this.state.apiKey);
   }
 
   getSignature(meetConfig, apiKey) {
     //Api que vamos disponibilizar
-    fetch("https://zoomsignaturebludata.herokuapp.com", {
+    fetch(this.state.signatureUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(meetConfig )
+      body: JSON.stringify(meetConfig)
     })
       .then(result => result.json())
       .then(response => {
@@ -72,19 +76,19 @@ class App extends Component {
                 console.log("join meeting success");
               },
               error(res) {
-             //   console.log(res);
+                //   console.log(res);
               }
             });
           },
           error(res) {
-           // console.log(res);
+            // console.log(res);
           }
         });
       });
   }
 
   render() {
-    const { meetingNumber, userName, passWord, meetingLaunched } = this.state;
+    const { meetingNumber, userName, passWord, meetingLaunched, uploadImageUrl, uploadImageTime } = this.state;
     return (
       <div className="App">
         {!meetingLaunched ? (
@@ -126,13 +130,13 @@ class App extends Component {
             </form>
             <div className="button-wrap">
               <button onClick={this.launchMeeting} className="button">
-               Entrar
+                Entrar
               </button>
             </div>
           </nav>
         ) : (
             <>
-            <WebcamCapture tempo={15} />
+              <WebcamCapture tempo={uploadImageTime} uploadImageUrl={uploadImageUrl} />
             </>
           )}
       </div>

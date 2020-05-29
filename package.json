@@ -3,14 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/preset-env": "^7.10.1",
+    "@babel/preset-react": "^7.10.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@zoomus/websdk": "^1.7.8",
     "axios": "^0.19.2",
+    "babel-preset-react": "^6.24.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "css-loader": "^3.5.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jquery": "^3.5.1",
@@ -23,14 +27,18 @@
     "react-webcam": "^5.0.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "style-loader": "^1.2.1",
+    "terser": "^4.7.0",
+    "terser-webpack-plugin": "^3.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "webpack",
     "server": "node server.js",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "terser": "npx terser src/index.js -m -c -o like_button.min.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -46,5 +54,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "file-loader": "^6.0.0",
+    "ttf-loader": "^1.0.2",
+    "webpack-cli": "^3.3.11"
   }
 }
